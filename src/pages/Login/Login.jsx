@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
 import "../Login/Login.scss";
 import axios from "axios";
-import { Context, server } from "../../main.jsx";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useDataContext } from "../../Context/DataContext";
 
 const Login = () => {
   const [logindata, setlogindata] = useState({ username: "", password: "" });
-
+  const [buttonDisable, setbuttonDisable] = useState(false);
   const navigate = useNavigate();
 
   const { isAuthenticated, setisAuthenticated, setreload } =
-    useContext(Context);
+    useDataContext();
 
   const handlechange = (e) => {
     setlogindata((prev) => ({
@@ -21,11 +21,13 @@ const Login = () => {
   };
 
   if (isAuthenticated) return navigate("/");
+
   function handlesubmit(e) {
     e.preventDefault();
+    setbuttonDisable(true);
     axios
       .post(
-        server + "/login",
+        import.meta.env.VITE_SERVER + "/login",
         {
           username: logindata.username,
           password: logindata.password,
@@ -34,10 +36,12 @@ const Login = () => {
       )
       .then((data) => {
         setisAuthenticated(true);
+        setbuttonDisable(false);
         setreload((prev) => !prev);
         navigate("/");
       })
       .catch((error) => {
+        setbuttonDisable(false);
         toast.error(error.response.data.message);
       });
     setlogindata({ username: "", password: "" });
@@ -46,10 +50,15 @@ const Login = () => {
   return (
     <>
       <div className="login">
-        <form className="loginform" onSubmit={handlesubmit} method="post">
+        <form
+          className="loginform"
+          onSubmit={(e) => handlesubmit(e)}
+          method="post"
+        >
           <label htmlFor="username">Username</label>
           <input
             type="text"
+            required
             value={logindata.username}
             name="username"
             placeholder="Enter Username..."
@@ -58,12 +67,15 @@ const Login = () => {
           <label htmlFor="password">Password</label>
           <input
             type="password"
+            required
             value={logindata.password}
             name="password"
             placeholder="Enter Password..."
             onChange={(e) => handlechange(e)}
           />
-          <button type="submit">Login</button>
+          <button disabled={buttonDisable ? true : false} type="submit">
+            Login
+          </button>
         </form>
       </div>
     </>

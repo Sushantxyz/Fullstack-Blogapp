@@ -1,0 +1,121 @@
+@use "../../pages/Utilie.scss" as Utile;
+
+%Comman1 {
+  background: var(--shimmer);
+  background-size: 300%;
+  background-position-x: 100%;
+  animation: shimmer 1s infinite linear;
+}
+
+%Comman {
+  margin-block: 1rem;
+  border-radius: 1rem;
+  @extend %Comman1;
+}
+
+@mixin Comman2($marBot, $minH) {
+  margin-bottom: $marBot;
+  min-height: $minH;
+  width: 98vw;
+  @extend %Comman1;
+}
+
+@mixin Comman3($height, $width) {
+  height: $height;
+  width: $width;
+  @extend %Comman1;
+}
+
+.loader {
+  @include Utile.CustomWH($w: 100vw, $h: 100vh);
+  @include Utile.CustomFlex($justifyContent: center, $alignItem: center);
+  background-color: var(--bglight);
+  color: var(--bgdark);
+}
+
+.shimmer {
+  @include Utile.CustomFlex(
+    $justifyContent: space-evenly,
+    $alignItem: center,
+    $flexWrap: wrap
+  );
+  @include Utile.CustomWH($w: 98vw, $mh: 100vh);
+  background-color: var(--bglight);
+  padding-top: 2rem;
+
+  > div {
+    @include Utile.CustomFlex($direction: column, $alignItem: center);
+    @include Utile.CustomWH($mw: 20rem, $h: 350px);
+    background: linear-gradient(#e3e3e3, #f4f4f4);
+
+    margin-bottom: 2rem;
+    border-radius: 0.5rem;
+    animation: shimmer 5s linear 5s infinite alternate;
+
+    :nth-child(1) {
+      @include Utile.CustomWH($w: 90%, $h: 50%);
+      @extend %Comman;
+    }
+    :nth-child(2) {
+      @include Utile.CustomWH($w: 90%, $h: 30%);
+      @extend %Comman;
+    }
+  }
+}
+
+.mainShimmer {
+  background-color: var(--bglight);
+}
+
+.CarousolShimmer {
+  @include Utile.CustomFlex($flexWrap: wrap);
+  @include Comman2(2rem, 25vh);
+}
+
+.HeaderShimmer {
+  @include Utile.CustomFlex($flexWrap: wrap);
+  @include Comman2(1rem, 10vh);
+}
+
+.LoginShimmer {
+  @include Utile.CustomFlex($justifyContent: center, $alignItem: center);
+  @include Utile.CustomWH($w: 98vw, $h: calc(100vh - 4rem));
+  background-color: var(--bglight);
+  color: var(--bgdark);
+
+  > div {
+    border-radius: 1rem;
+    @include Comman3(50vh, 30vmax);
+  }
+}
+
+.detailParent {
+  @include Utile.CustomFlex(
+    $direction: column,
+    $justifyContent: space-around,
+    $alignItem: center
+  );
+}
+
+.DetailShimmer {
+  @include Utile.CustomFlex(
+    $direction: column,
+    $justifyContent: space-around,
+    $alignItem: center
+  );
+  @include Utile.CustomWH($w: 96vw, $h: 90vh);
+  background: linear-gradient(#e3e3e3, #f4f4f4);
+
+  :nth-child(1) {
+    @include Comman3(60%, 95vw);
+  }
+  :nth-child(2) {
+    @include Comman3(25%, 95vw);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: 0%;
+  }
+}

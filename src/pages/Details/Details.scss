@@ -1,40 +1,40 @@
+@use "../../pages/Utilie.scss" as Utilie;
+
 %general {
   cursor: pointer;
   padding-block: 0.3rem;
-  box-shadow: 0px 0px 4px black;
+  box-shadow: 0px 0px 4px var(--bgdark);
   border-radius: 5px;
   font: 500 1rem "san-serif";
   width: 100%;
 }
 
 .Blog-Details {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
   padding: 2rem 1rem;
+  background-color: var(--bglight);
+  color: var(--textdark);
+  @include Utilie.CustomFlex($direction: column, $justifyContent: space-around);
   img {
     height: 60vh;
     object-fit: contain;
-    box-shadow: 1px 1px 4px rgb(89, 89, 89);
+    box-shadow: 1px 1px 4px var(--bgdark);
   }
-  >p {
+  > p {
     padding: 0.5rem;
     > span {
-      font:600 1rem "Popins", sans-serif;
+      font: 600 1rem "Popins", sans-serif;
       padding-inline: 0.2rem;
     }
   }
   h2 {
     padding: 0.5rem;
-    display: flex;
-    justify-content: space-between;
+    @include Utilie.CustomFlex($justifyContent: space-between);
     font-family: "Poppins", sans-serif;
     div button {
       border: none;
-      background-color: white;
+      background-color: var(--bglight);
       font-size: 1.5rem;
       cursor: pointer;
-      
     }
   }
 }
@@ -61,35 +61,45 @@
   padding: 0.8rem;
   font-size: 1rem;
   border-radius: 0.25rem;
-  color: white;
-  background-color: rgb(39, 125, 39);
   outline: none;
   margin-top: 0.5rem;
   border: none;
   cursor: pointer;
   transition: 0.3s ease;
+  color: var(--textlight);
+  background-color: var(--bgdark);
+  box-shadow: 0px 0px 4px var(--bgdark);
+
   &:hover {
-    background-color: rgb(15, 103, 15);
+    background-color: var(--button);
+    color: var(--textdark);
+  }
+  &:disabled {
+    background-color: var(--bgdark);
+    opacity: 0.5;
+    cursor: wait;
   }
 }
 
 .titleinput {
+  background-color: var(--bglight);
+  color: var(--textdark);
   width: 100%;
   padding: 0.5rem;
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--bgdark);
   outline: none;
   font: 500 1.5rem "Popins", cursive;
 }
 
 .descriptioninput {
-  width: 100%;
+  background-color: var(--bglight);
+  color: var(--textdark);
   padding: 0.5rem;
-  height: 8rem;
-  // font-family: "Popins", sans-serif;
+  @include Utilie.CustomWH($w: 100%, $h: 8rem);
   border: none;
   font-size: 1rem;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--bgdark);
   outline: none;
   > span {
     font-weight: bold;
@@ -98,13 +108,14 @@
 
 .cat {
   margin-left: 0.5rem;
-  margin-block:0.5rem;
-  font:600 0.9rem sans-serif;
+  margin-block: 0.5rem;
+  font: 600 0.9rem sans-serif;
   > span {
     @extend %general;
     margin-inline: 0.5rem;
     padding-inline: 0.5rem;
-    background-color: white;
+    color: var(--bgdark);
+    background-color: var(--bglight);
     width: fit-content;
   }
 }

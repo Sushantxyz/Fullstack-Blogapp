@@ -1,15 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Context, server } from "../../main";
+import { useDataContext } from "../../Context/DataContext.jsx";
 import "../header/Header.scss";
 import toast from "react-hot-toast";
+import { useTheme } from "../../Context/ThemeContext.jsx";
 
 const Header = () => {
   const navigate = useNavigate();
   const [openprofile, setopenprofile] = useState(false);
   const [userdata, setuserdata] = useState();
-  const PF = "https://blogapp-backend-sj5x.onrender.com/images/";
 
   const {
     isAuthenticated,
@@ -18,24 +18,30 @@ const Header = () => {
     setuser,
     reload,
     setreload,
-  } = useContext(Context);
+  } = useDataContext();
+
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (isAuthenticated) {
-      axios.get(server + "/getuser", { withCredentials: true }).then((data) => {
-        setuserdata(data.data._user.profilepicture.url);
-      });
+      axios
+        .get(import.meta.env.VITE_SERVER + "/getuser", {
+          withCredentials: true,
+        })
+        .then((data) => {
+          setuserdata(data.data._user.profilepicture.url);
+        });
     } else {
       navigate("/login");
     }
-  }, [isAuthenticated, reload]); // need check
+  }, [isAuthenticated, reload]);
 
   function handleSignOut() {
     setopenprofile((prev) => !prev);
 
     const data = axios
       .post(
-        server + "/logout",
+        import.meta.env.VITE_SERVER + "/logout",
         {},
         {
           withCredentials: true,
@@ -51,11 +57,11 @@ const Header = () => {
         toast.error(error.response.data.message);
       });
   }
-  
+
   return (
     <>
       <div className="container">
-        <div className="logo" onClick={()=>navigate("/")} >
+        <div className="logo" onClick={() => navigate("/")}>
           Sundar Blog
         </div>
 
@@ -80,31 +86,11 @@ const Header = () => {
         )}
 
         {!isAuthenticated ? (
-          <div className="nav-auth">
-            <div className="nav-login">
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                Login
-              </Link>
-            </div>
-            <div className="nav-register">
-              <Link
-                to="/register"
-                style={{ textDecoration: "none", color: "black" }}
-              >
-                Register
-              </Link>
-            </div>
-          </div>
+          <RegisterLogin theme={theme} toggleTheme={toggleTheme} />
         ) : (
-          <div
-            className="profile"
-            onClick={() => setopenprofile((prev) => !prev)}
-          >
-            {!openprofile ? (
-              <div className="profile-pic">
+          <div className="profile">
+            <div className="profile-pic">
+              <div onClick={() => setopenprofile((prev) => !prev)}>
                 {!userdata ? (
                   <i
                     className="fa-solid fa-user"
@@ -113,21 +99,11 @@ const Header = () => {
                 ) : (
                   <img src={userdata} />
                 )}
-                <i className="fa-solid fa-magnifying-glass"></i>{" "}
               </div>
-            ) : (
-              <div className="profile-pic">
-                {!userdata ? (
-                  <i
-                    className="fa-solid fa-user"
-                    style={{ paddingInline: "0.2rem" }}
-                  ></i>
-                ) : (
-                  <img src={userdata} />
-                )}
-                <i className="fa-solid fa-magnifying-glass"></i>{" "}
+              <div onClick={toggleTheme} className="theme">
+                {theme === "light" ? "🌙" : "🔆"}
               </div>
-            )}
+            </div>
           </div>
         )}
 
@@ -149,19 +125,21 @@ const Header = () => {
 
               <li className="nav">
                 <i className="fa-solid fa-plus"></i>
-                <Link to="/post">
-                  <button onClick={() => setopenprofile((prev) => !prev)}>
-                    Create Post
-                  </button>
+                <Link
+                  onClick={() => setopenprofile((prev) => !prev)}
+                  to="/post"
+                >
+                  Create Post
                 </Link>
               </li>
 
               <li className="nav">
                 <i className="fa-solid fa-pen"></i>
-                <Link to="/update">
-                  <button onClick={() => setopenprofile((prev) => !prev)}>
-                    Update profile
-                  </button>
+                <Link
+                  onClick={() => setopenprofile((prev) => !prev)}
+                  to="/update"
+                >
+                  Update profile
                 </Link>
               </li>
 
@@ -186,9 +164,9 @@ const Header = () => {
                 Contact us
               </li>
 
-              <li className="nav">
+              <li onClick={handleSignOut} className="nav">
                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
-                <button onClick={handleSignOut}>Signout</button>
+                Signout
               </li>
             </ul>
           </div>
@@ -199,3 +177,19 @@ const Header = () => {
 };
 
 export default Header;
+
+const RegisterLogin = ({theme,toggleTheme}) => {
+  return (
+    <div className="nav-auth">
+      <div className="nav-login">
+        <Link to="/login">Login</Link>
+      </div>
+      <div className="nav-register">
+        <Link to="/register">Register</Link>
+      </div>
+      <div onClick={toggleTheme} className="theme">
+        {theme === "light" ? "🌙" : "🔆"}
+      </div>
+    </div>
+  );
+};

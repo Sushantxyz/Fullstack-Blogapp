@@ -26,6 +26,7 @@
 @media screen and (max-width: 450px) {
   .container {
     max-width: 100%;
+    justify-content: space-between;
   }
   .BlogCard {
     width: 42vmax !important;

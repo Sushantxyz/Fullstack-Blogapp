@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./Post.scss";
 import axios from "axios";
-import { Context, server, serverpost } from "../../main";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { category } from "../../assets/data/data.js";
+import { useDataContext } from "../../Context/DataContext";
 
 const Post = () => {
   const [title, settitle] = useState("");
   const [description, setdescription] = useState("");
   const [file, setfile] = useState(null);
   const [image, setimage] = useState(null);
-
   const [cat, setcat] = useState([]);
   const navigate = useNavigate();
-  const { user } = useContext(Context);
+  const { user } = useDataContext();
+  const [disable, setdisable] = useState(false);
 
   function displaycategory(catdata) {
     if (cat.includes(catdata)) {
@@ -40,7 +40,7 @@ const Post = () => {
 
   async function submithandler(e) {
     e.preventDefault();
-
+    setdisable(true);
     const newPost = {
       username: user,
       title,
@@ -50,12 +50,16 @@ const Post = () => {
     };
 
     axios
-      .post(serverpost + "/create", newPost, { withCredentials: true })
+      .post(import.meta.env.VITE_SERVERPOST + "/create", newPost, {
+        withCredentials: true,
+      })
       .then((data) => {
         toast.success("Posted created !!");
+        setdisable(false);
         navigate(`/${data.data.id}`);
       })
       .catch((error) => {
+        setdisable(false);
         toast.error("make sure contain is unique !!");
       });
   }
@@ -89,6 +93,7 @@ const Post = () => {
           <input
             type="file"
             id="fileimg"
+            required
             onChange={(e) => setfile(e.target.files[0])}
             style={{ display: "none" }}
           />
@@ -97,6 +102,7 @@ const Post = () => {
             type="text"
             placeholder="Title..."
             onChange={(e) => settitle(e.target.value)}
+            required
           />
 
           <textarea
@@ -104,9 +110,12 @@ const Post = () => {
             id=""
             placeholder="Write your story..."
             onChange={(e) => setdescription(e.target.value)}
+            required
           />
 
-          <button type="submit">Publish</button>
+          <button disabled={disable} type="submit">
+            Publish
+          </button>
         </form>
       </div>
     </>

@@ -1,0 +1,56 @@
+$light: white;
+$dark: black;
+
+$textlight: white;
+$textdark: black;
+
+$darkLight: rgb(224, 224, 224);
+$LightDark: rgb(35, 35, 35);
+
+[data-theme="light"] {
+  --bglight: white;
+  --bgdark: black;
+  --bglightdark: rgb(50, 50, 50) black;
+  --textlight: white;
+  --textdark: black;
+  --button: var(var(--bglight));
+  --shimmer: linear-gradient(-45deg, #eee 40%, #fafafa 50%, #eee 60%);
+}
+
+[data-theme="dark"] {
+  --bglight: rgb(34, 34, 34);
+  --bgdark: white;
+  --textlight: black;
+  --textdark: white;
+  --button: rgb(34, 34, 34);
+  --shimmer: linear-gradient(-45deg, #545454 40%, #929292 50%, #545454 60%);
+}
+
+@mixin CustomFlex(
+  $direction: row,
+  $justifyContent: unset,
+  $alignItem: unset,
+  $flexWrap: unset
+) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justifyContent;
+  align-items: $alignItem;
+  flex-wrap: $flexWrap;
+}
+
+@mixin CustomWH(
+  $w: unset,
+  $h: unset,
+  $mh: unset,
+  $maxh: unset,
+  $mw: unset,
+  $maxw: unset
+) {
+  width: $w;
+  height: $h;
+  min-height: $mh;
+  min-width: $mw;
+  max-height: $maxh;
+  max-width: $maxw;
+}

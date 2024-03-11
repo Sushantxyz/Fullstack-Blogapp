@@ -6,7 +6,15 @@ const BlogCard = ({ post }) => {
     <>
       <div className="BlogCard">
         <img loading="lazy" src={post.photo.url} alt="" />
-        <b>Title : {post.title}</b>
+        {post.title.length > 30 ? (
+          <>
+            <b>Title : {post.title.slice(0, 25)}..</b>
+          </>
+        ) : (
+          <>
+           <b>Title : {post.title}</b>
+          </>
+        )}
         <span>
           <span>Posted on :</span> {post.createdAt.split("T")[0]}
         </span>

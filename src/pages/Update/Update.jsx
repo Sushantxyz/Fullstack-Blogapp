@@ -3,7 +3,7 @@ import "../Update/Update.scss";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Context, server } from "../../main";
+import { useDataContext } from "../../Context/DataContext";
 
 const Update = () => {
   const [updatedusername, setupdatedusername] = useState("");
@@ -11,7 +11,8 @@ const Update = () => {
   const [file, setfile] = useState(null);
   const [image, setimage] = useState(null);
   const navigate = useNavigate();
-  const { setreload } = useContext(Context);
+  const { setreload } = useDataContext();
+  const [disable, setdisable] = useState(false);
 
   function handlechange(file) {
     if (file) {
@@ -29,7 +30,7 @@ const Update = () => {
 
   function submithandler(e) {
     e.preventDefault();
-
+    setdisable(true);
     const newPost = {
       updatedusername,
       password,
@@ -37,13 +38,17 @@ const Update = () => {
     };
 
     axios
-      .put(server + "/update", newPost, { withCredentials: true })
+      .put(import.meta.env.VITE_SERVER + "/update", newPost, {
+        withCredentials: true,
+      })
       .then((data) => {
         setreload((prev) => !prev);
+        setdisable(false);
         navigate(`/`);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
+        setdisable(false);
       });
   }
   return (
@@ -78,6 +83,7 @@ const Update = () => {
             className="updatebutton"
             style={{ width: "250px", marginTop: "1rem" }}
             type="submit"
+            disabled={disable}
           >
             Update
           </button>

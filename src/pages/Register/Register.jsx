@@ -2,14 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import "../Register/Register.scss";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Context, server } from "../../main";
 import toast from "react-hot-toast";
+import { useDataContext } from "../../Context/DataContext";
 
 const Register = () => {
   const navigate = useNavigate();
 
   const { isAuthenticated, setisAuthenticated, setreload } =
-    useContext(Context);
+    useDataContext();
 
   const [strongpassword, setstrongpassword] = useState(false);
 
@@ -36,9 +36,10 @@ const Register = () => {
 
   function handlesubmit(e) {
     e.preventDefault();
+    setstrongpassword(false);
     axios
       .post(
-        server + "/register",
+        import.meta.env.VITE_SERVER + "/register",
         {
           username: registerdata.username,
           email: registerdata.email,
@@ -49,9 +50,11 @@ const Register = () => {
       .then((data) => {
         setisAuthenticated(true);
         navigate("/");
+        setstrongpassword(true);
         setreload((prev) => !prev);
       })
       .catch((error) => {
+        setstrongpassword(true);
         toast.error(error.response.data.message);
       });
   }
@@ -65,6 +68,7 @@ const Register = () => {
         <input
           type="text"
           placeholder="Enter Username..."
+          required
           onChange={handlechange}
           name="username"
           value={registerdata.username}
@@ -73,6 +77,7 @@ const Register = () => {
         <input
           type="email"
           placeholder="Enter Email..."
+          required
           onChange={handlechange}
           name="email"
           value={registerdata.email}
@@ -81,6 +86,7 @@ const Register = () => {
         <input
           type="password"
           placeholder="Enter Password..."
+          required
           onChange={handlechange}
           name="password"
           value={registerdata.password}
@@ -88,7 +94,7 @@ const Register = () => {
         {!strongpassword && (
           <div
             style={{
-              position:"relative",
+              position: "relative",
               marginLeft: "auto",
               color: "red",
               paddingRight: "1rem",

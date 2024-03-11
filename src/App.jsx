@@ -1,36 +1,31 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useContext, useEffect, useState, lazy, Suspense } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 import axios from "axios";
-import { Context, server } from "./main";
+import { useDataContext } from "./Context/DataContext";
 import Header from "./components/header/Header";
-// import Home from "./pages/Home/Home";
-// import Details from "./pages/Details/Details";
-// import Login from "./pages/Login/Login";
-// import Post from "./pages/Post/Post";
-// import Register from "./pages/Register/Register";
-// import Update from "./pages/Update/Update";
 
-const Home = lazy(() => import("./pages/Home/Home"));
-const Details = lazy(() => import("./pages/Details/Details"));
-const Login = lazy(() => import("./pages/Login/Login"));
+const Home = lazy(() => import("./pages/Home/Home.jsx"));
+const Details = lazy(() => import("./pages/Details/Details.jsx"));
+const Login = lazy(() => import("./pages/Login/Login.jsx"));
 const Post = lazy(() => import("./pages/Post/Post.jsx"));
-const Register = lazy(() => import("./pages/Register/Register"));
-const Update = lazy(() => import("./pages/Update/Update"));
+const Register = lazy(() => import("./pages/Register/Register.jsx"));
+const Update = lazy(() => import("./pages/Update/Update.jsx"));
+import MainShimmer, { Loader, LoginShimmer } from "./components/Loader/Loader";
 
 import "./pages/mediaquery.scss";
+import { useTheme } from "./Context/ThemeContext";
 
 function App() {
   const [loading, setloading] = useState(true);
-
   const { isAuthenticated, setuser, setisAuthenticated, reload } =
-    useContext(Context);
+    useDataContext();
 
   useEffect(() => {
     setloading(true);
     axios
-      .get(server + "/getuser", { withCredentials: true })
+      .get(import.meta.env.VITE_SERVER + "/getuser", { withCredentials: true })
       .then((data) => {
         setloading(false);
         setisAuthenticated(true);
@@ -42,32 +37,34 @@ function App() {
       });
   }, [reload]);
 
+  
+
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <>{isAuthenticated ? <MainShimmer /> : <LoginShimmer />}</>;
   }
 
   return (
     <>
       <BrowserRouter>
         <Header />
-        <Suspense fallback={<h2>Loading ....</h2>}>
-        <Routes>
-          {isAuthenticated ? (
-            <>
-              <Route path="/" element={<Home />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/post" element={<Post />} />
-              <Route path="/update" element={<Update />} />
-              <Route path="/:id" element={<Details />} />
-            </>
-          ) : (
-            <>
-              <Route path="/*" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-            </>
-          )}
-        </Routes>
+        <Suspense fallback={<Loader />}>
+          <Routes>
+            {isAuthenticated ? (
+              <>
+                <Route path="/" element={<Home />} />
+                <Route path="/register" element={<Home />} />
+                <Route path="/login" element={<Home />} />
+                <Route path="/post" element={<Post />} />
+                <Route path="/update" element={<Update />} />
+                <Route path="/:id" element={<Details />} />
+              </>
+            ) : (
+              <>
+                <Route path="/*" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </>
+            )}
+          </Routes>
         </Suspense>
         <Toaster />
       </BrowserRouter>

@@ -1,6 +1,10 @@
+@use "../../pages/Utilie.scss" as Utilie;
+
 .category {
-  margin-top: 50px;
+  padding-top: 30px;
   position: relative;
+  background-color: var(--bglight);
+  // color: var(--textdark);
 
   .box {
     border-radius: 0;
@@ -11,8 +15,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 250px;
+      @include Utilie.CustomWH($w: 100%, $h: 250px);
       background: rgba(0, 0, 0, 0.5);
     }
 
@@ -20,8 +23,8 @@
     position: relative;
 
     img {
-      width: 100%;
-      height: 250px;
+     
+      @include Utilie.CustomWH($w: 100%, $h: 250px);
       object-fit: cover;
     }
 
@@ -32,7 +35,7 @@
       text-align: center;
       width: 100%;
       z-index: 2;
-      color: #fff;
+      color: white;
 
       h4 {
         font-weight: 500;
@@ -40,7 +43,7 @@
       }
 
       p {
-        color: #fff;
+        color: white;
         font-weight: 300;
         padding: 15px;
       }
@@ -49,16 +52,14 @@
 }
 
 .control-btn {
-  button {
-    background: white;
-    width: 30px;
-    height: 30px;
+  > button {
+    background: var(--bglight);
+    color: var(--textdark);
+    @include Utilie.CustomWH($w: 30px, $h: 30px);
+    @include Utilie.CustomFlex($justifyContent: center, $alignItem: center);
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 3px 6px rgb(0 0 0 / 16%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     transition: 0.5s;
     padding: 2px;
   }

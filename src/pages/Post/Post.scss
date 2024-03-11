@@ -1,7 +1,9 @@
+@use "../../pages/Utilie.scss" as Utilie;
+
 %general {
   cursor: pointer;
   padding-block: 0.7rem;
-  box-shadow: 0px 0px 4px black;
+  box-shadow: 0px 0px 4px var(--bgdark);
   border-radius: 10px;
   font: 600 1rem "Raleway";
   width: 100%;
@@ -12,17 +14,15 @@
 }
 
 .post {
-  margin-block: 2rem;
-  width: 100%;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  padding-block: 2rem;
+  @include Utilie.CustomWH($w: 100%, $mh: calc(100vh - 4rem));
+  @include Utilie.CustomFlex($direction: column, $justifyContent: center);
+  background-color: var(--bglight);
+  color: var(--bgdark);
   form {
-    display: flex;
-    flex-direction: column;
-    height: 40%;
-    width: 80%;
+    @include Utilie.CustomFlex($direction: column);
+    @include Utilie.CustomWH($w: 80%, $h: 40%);
+
     border-radius: 20px;
     margin-top: 1rem;
     margin-inline: auto;
@@ -31,12 +31,18 @@
     }
     button {
       @extend %general;
-      background-color: aquamarine;
       transition: 0.2s ease;
+      background-color: var(--bgdark);
+      color: var(--textlight);
       &:hover {
-        background-color: rgb(82, 227, 178);
+        background-color: var(--bglight);
+        color: var(--textdark);
       }
-      margin-bottom: 2rem;
+      &:disabled {
+        background-color: var(--bgdark);
+        opacity: 0.5;
+        cursor: wait;
+      }
     }
     textarea {
       @extend %general;
@@ -48,15 +54,13 @@
     }
     > div {
       @extend %general;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
+      @include Utilie.CustomFlex($flexWrap: wrap, $alignItem: center);
+
       > span {
-        display: flex;
-        justify-content: center;
+        @include Utilie.CustomFlex($justifyContent: center);
         @extend %general;
         margin-inline: 0.5rem;
-        background-color: white;
+        background-color: var(--bglight);
         padding-block: 0.5rem;
         opacity: 0.8;
         max-width: 6rem;
@@ -67,18 +71,18 @@
 
 .postimg {
   display: flex;
-  width: 100%;
-  height: 50%;
+  @include Utilie.CustomWH($w: 100%, $h: 50%);
+
   img {
-    max-height: 50vh;
-    width: 80%;
+    @include Utilie.CustomWH($w: 80%, $maxh: 50vh);
     border-radius: 10px;
-    box-shadow: 0px 1px 4px black;
+    box-shadow: 0px 1px 4px var(--bgdark);
     margin-inline: auto;
     object-fit: contain;
   }
 }
 
 .selected {
-  background-color: rgb(179, 169, 169) !important;
+  background-color: var(--bgdark) !important;
+  color: var(--textlight);
 }

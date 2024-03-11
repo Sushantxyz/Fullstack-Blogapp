@@ -1,7 +1,9 @@
+@use "../../pages/Utilie.scss" as Utilie;
+
 %general {
   padding-block: 1rem;
   border-radius: 10px;
-  box-shadow: 0px 0px 4px black;
+  box-shadow: 0px 0px 4px var(--bgdark);
   font-family: "Raleway", sans-serif;
   width: 15rem;
   margin-block: 0.8rem;
@@ -12,27 +14,22 @@
   border: none;
 }
 
-@mixin flex($display) {
-  display: flex;
-  flex-direction: $display;
-  justify-content: center;
-  align-items: center;
-}
-
 .login {
-  width: 100%;
-  height: calc(100vh - 6rem);
+  @include Utilie.CustomWH($h: calc(100vh - 4rem), $w: 100%);
   object-fit: contain;
-  @include flex(row);
-  background-image: url("https://t3.ftcdn.net/jpg/03/55/60/70/360_F_355607062_zYMS8jaz4SfoykpWz5oViRVKL32IabTP.jpg");
+  @include Utilie.CustomFlex($justifyContent: center, $alignItem: center);
+  background-color: var(--bglight);
   background-size: cover;
+  color: var(--textdark);
   form {
-    min-width: 20%;
-    min-height: 50%;
-    @include flex(column);
+    @include Utilie.CustomWH($mh: 50%, $mw: 20%);
+    @include Utilie.CustomFlex(
+      $direction: column,
+      $justifyContent: center,
+      $alignItem: center
+    );
     padding: 1rem;
     box-shadow: 2px 2px 10px gray;
-    background-color: white;
     border-radius: 10px;
     input {
       @extend %general;
@@ -49,12 +46,18 @@
       @extend %general;
       font: 400 1.2rem sans-serif;
       letter-spacing: 0.01rem;
-      color: white;
-      background-color: rgb(39, 125, 39);
       cursor: pointer;
       transition: 0.3s ease;
+      background-color: var(--bgdark);
+      color: var(--textlight);
       &:hover {
-        background-color: rgb(15, 103, 15);
+        background-color: var(--button);
+        color: var(--textdark);
+      }
+      &:disabled {
+        background-color: var(--bgdark);
+        opacity: 0.5;
+        cursor: wait;
       }
     }
   }
